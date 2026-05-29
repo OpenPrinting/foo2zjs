@@ -943,6 +943,7 @@ install-gui:
 
 USBDIR=/etc/hotplug/usb
 UDEVDIR=/etc/udev/rules.d
+LIBUDEVROOTDIR=/lib/udev
 LIBUDEVDIR=/lib/udev/rules.d
 RULES=hplj10xx.rules
 #UDEVD=/sbin/udevd
@@ -1015,41 +1016,43 @@ install-hotplug-prog:
 	    elif [ -x /usr/lib/systemd/systemd-udevd ]; then \
 		version=`/usr/lib/systemd/systemd-udevd --version 2>/dev/null`; \
 	    fi; \
-	    version=`echo $$version | sed -e 's/^v//' -e 's/-.*//' `; \
+	    version=`echo $$version | awk -F. '{print $$1}'`; \
 	    if [ "$$version" = "" ]; then version=0; fi; \
 	    echo "***"; \
 	    echo "*** udev version $$version"; \
 	    echo "***"; \
+	    [ -d $(DESTDIR)$(LIBUDEVDIR) ] || $(INSTALL) -d -m 755 $(DESTDIR)$(LIBUDEVDIR)/; \
 	    if [ "$$version" -lt 148 ]; then \
-		$(INSTALL) -c -m 644 $(RULES).old $(DESTDIR)$(UDEVDIR)/11-$(RULES); \
+		$(INSTALL) -c -m 644 $(RULES).old $(DESTDIR)$(LIBUDEVDIR)/11-$(RULES); \
 	    else \
-		$(INSTALL) -c -m 644 $(RULES) $(DESTDIR)$(UDEVDIR)/11-$(RULES); \
+		$(INSTALL) -c -m 644 $(RULES) $(DESTDIR)$(LIBUDEVDIR)/11-$(RULES); \
 	    fi \
 	fi
 	if [ -d $(DESTDIR)$(DEVDDIR) ]; then \
 	    $(INSTALL) -c -m 644 hplj10xx.conf $(DESTDIR)$(DEVDDIR)/; \
 	fi
-	[ -d $(DESTDIR)$(USBDIR) ] || $(INSTALL) -d -m 755 $(DESTDIR)$(USBDIR)/
-	$(INSTALL) -c -m 755 hplj1000 $(DESTDIR)$(USBDIR)/
-	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hplj1005
-	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hplj1018
-	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hplj1020
-	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1005
-	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1006
-	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1007
-	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1008
-	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1505
-	$(DESTDIR)$(USBDIR)/hplj1000 install-usermap
-	$(DESTDIR)$(USBDIR)/hplj1005 install-usermap
-	$(DESTDIR)$(USBDIR)/hplj1018 install-usermap
-	$(DESTDIR)$(USBDIR)/hplj1020 install-usermap
-	$(DESTDIR)$(USBDIR)/hpljP1005 install-usermap
-	$(DESTDIR)$(USBDIR)/hpljP1006 install-usermap
-	$(DESTDIR)$(USBDIR)/hpljP1007 install-usermap
-	$(DESTDIR)$(USBDIR)/hpljP1008 install-usermap
-	$(DESTDIR)$(USBDIR)/hpljP1505 install-usermap
+	[ -d $(DESTDIR)$(LIBUDEVROOTDIR) ] || $(INSTALL) -d -m 755 $(DESTDIR)$(LIBUDEVROOTDIR)/
+	$(INSTALL) -c -m 755 hplj1000 $(DESTDIR)$(LIBUDEVROOTDIR)/
+	ln -sf $(LIBUDEVROOTDIR)/hplj1000 $(DESTDIR)$(LIBUDEVROOTDIR)/hplj1005
+	ln -sf $(LIBUDEVROOTDIR)/hplj1000 $(DESTDIR)$(LIBUDEVROOTDIR)/hplj1018
+	ln -sf $(LIBUDEVROOTDIR)/hplj1000 $(DESTDIR)$(LIBUDEVROOTDIR)/hplj1020
+	ln -sf $(LIBUDEVROOTDIR)/hplj1000 $(DESTDIR)$(LIBUDEVROOTDIR)/hpljP1005
+	ln -sf $(LIBUDEVROOTDIR)/hplj1000 $(DESTDIR)$(LIBUDEVROOTDIR)/hpljP1006
+	ln -sf $(LIBUDEVROOTDIR)/hplj1000 $(DESTDIR)$(LIBUDEVROOTDIR)/hpljP1007
+	ln -sf $(LIBUDEVROOTDIR)/hplj1000 $(DESTDIR)$(LIBUDEVROOTDIR)/hpljP1008
+	ln -sf $(LIBUDEVROOTDIR)/hplj1000 $(DESTDIR)$(LIBUDEVROOTDIR)/hpljP1505
+	# This is all very ancient
+	#$(DESTDIR)$(USBDIR)/hplj1000 install-usermap
+	#$(DESTDIR)$(USBDIR)/hplj1005 install-usermap
+	#$(DESTDIR)$(USBDIR)/hplj1018 install-usermap
+	#$(DESTDIR)$(USBDIR)/hplj1020 install-usermap
+	#$(DESTDIR)$(USBDIR)/hpljP1005 install-usermap
+	#$(DESTDIR)$(USBDIR)/hpljP1006 install-usermap
+	#$(DESTDIR)$(USBDIR)/hpljP1007 install-usermap
+	#$(DESTDIR)$(USBDIR)/hpljP1008 install-usermap
+	#$(DESTDIR)$(USBDIR)/hpljP1505 install-usermap
 	# modprobe usblp
-	$(DESTDIR)$(USBDIR)/hplj1000 install-usblp
+	#$(DESTDIR)$(USBDIR)/hplj1000 install-usblp
 
 install-hotplug-osx:
 ifeq ($(UNAME),Darwin)
