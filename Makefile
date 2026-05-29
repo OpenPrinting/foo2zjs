@@ -21,18 +21,18 @@ PREFIX=/usr
 
 # Pathnames for this package...
 BIN=$(PREFIX)/bin
-SHAREZJS=$(PREFIX)/share/foo2zjs
-SHAREOAK=$(PREFIX)/share/foo2oak
-SHAREHP=$(PREFIX)/share/foo2hp
-SHAREXQX=$(PREFIX)/share/foo2xqx
-SHARELAVA=$(PREFIX)/share/foo2lava
-SHAREQPDL=$(PREFIX)/share/foo2qpdl
-SHARESLX=$(PREFIX)/share/foo2slx
-SHAREHC=$(PREFIX)/share/foo2hiperc
-SHAREHBPL=$(PREFIX)/share/foo2hbpl
-SHAREDDST=$(PREFIX)/share/foo2ddst
-MANDIR=$(PREFIX)/share/man
-DOCDIR=$(PREFIX)/share/doc/foo2zjs/
+SHAREZJS=$(DESTDIR)$(PREFIX)/share/foo2zjs
+SHAREOAK=$(DESTDIR)$(PREFIX)/share/foo2oak
+SHAREHP=$(DESTDIR)$(PREFIX)/share/foo2hp
+SHAREXQX=$(DESTDIR)$(PREFIX)/share/foo2xqx
+SHARELAVA=$(DESTDIR)$(PREFIX)/share/foo2lava
+SHAREQPDL=$(DESTDIR)$(PREFIX)/share/foo2qpdl
+SHARESLX=$(DESTDIR)$(PREFIX)/share/foo2slx
+SHAREHC=$(DESTDIR)$(PREFIX)/share/foo2hiperc
+SHAREHBPL=$(DESTDIR)$(PREFIX)/share/foo2hbpl
+SHAREDDST=$(DESTDIR)$(PREFIX)/share/foo2ddst
+MANDIR=$(DESTDIR)$(PREFIX)/share/man
+DOCDIR=$(DESTDIR)$(PREFIX)/share/doc/foo2zjs/
 INSTALL=install
 ROOT=root
 
@@ -656,11 +656,11 @@ install-prog:
 	#
 	# Install driver, wrapper, and development tools
 	#
-	$(INSTALL) -d $(BIN)
-	$(INSTALL) -c $(PROGS) $(SHELLS) $(BIN)/
+	$(INSTALL) -d $(DESTDIR)$(BIN)
+	$(INSTALL) -c $(PROGS) $(SHELLS) $(DESTDIR)$(BIN)/
 	if [ "$(BINPROGS)" != "" ]; then \
-	    $(INSTALL) -d $(UDEVBIN); \
-	    $(INSTALL) -c $(BINPROGS) $(BIN); \
+	    $(INSTALL) -d $(DESTDIR)$(UDEVBIN); \
+	    $(INSTALL) -c $(BINPROGS) $(DESTDIR)$(BIN); \
 	fi
 	#
 	# Install gamma correction files.  These are just templates,
@@ -714,10 +714,10 @@ install-foo:
 	#
 	# Clear foomatic cache and rebuild database if needed
 	#
-	rm -rf /var/cache/foomatic/*/*
-	rm -f /var/cache/foomatic/printconf.pickle
-	if [ -d /var/cache/foomatic/compiled ]; then \
-	    cd /var/cache/foomatic/compiled; \
+	rm -rf $(DESTDIR)/var/cache/foomatic/*/*
+	rm -f $(DESTDIR)/var/cache/foomatic/printconf.pickle
+	if [ -d $(DESTDIR)/var/cache/foomatic/compiled ]; then \
+	    cd $(DESTDIR)/var/cache/foomatic/compiled; \
 	    foomatic-combo-xml -O >overview.xml; \
 	fi
 
@@ -853,10 +853,10 @@ install-extra:
 	    fi; \
 	done
 
-MODEL=$(PREFIX)/share/cups/model
+MODEL=$(DESTDIR)$(PREFIX)/share/cups/model
 LOCALMODEL=$(DESTDIR)/local/share/cups/model
 MACMODEL=/Library/Printers/PPDs/Contents/Resources
-PPD=$(PREFIX)/share/ppd
+PPD=$(DESTDIR)$(PREFIX)/share/ppd
 VARPPD=/var/lp/ppd
 install-ppd:
 	#
@@ -1021,35 +1021,35 @@ install-hotplug-prog:
 	    echo "*** udev version $$version"; \
 	    echo "***"; \
 	    if [ "$$version" -lt 148 ]; then \
-		$(INSTALL) -c -m 644 $(RULES).old $(UDEVDIR)/11-$(RULES); \
+		$(INSTALL) -c -m 644 $(RULES).old $(DESTDIR)$(UDEVDIR)/11-$(RULES); \
 	    else \
-		$(INSTALL) -c -m 644 $(RULES) $(UDEVDIR)/11-$(RULES); \
+		$(INSTALL) -c -m 644 $(RULES) $(DESTDIR)$(UDEVDIR)/11-$(RULES); \
 	    fi \
 	fi
-	if [ -d $(DEVDDIR) ]; then \
-	    $(INSTALL) -c -m 644 hplj10xx.conf $(DEVDDIR)/; \
+	if [ -d $(DESTDIR)$(DEVDDIR) ]; then \
+	    $(INSTALL) -c -m 644 hplj10xx.conf $(DESTDIR)$(DEVDDIR)/; \
 	fi
-	[ -d $(USBDIR) ] || $(INSTALL) -d -m 755 $(USBDIR)/
-	$(INSTALL) -c -m 755 hplj1000 $(USBDIR)/
-	ln -sf $(USBDIR)/hplj1000 $(USBDIR)/hplj1005
-	ln -sf $(USBDIR)/hplj1000 $(USBDIR)/hplj1018
-	ln -sf $(USBDIR)/hplj1000 $(USBDIR)/hplj1020
-	ln -sf $(USBDIR)/hplj1000 $(USBDIR)/hpljP1005
-	ln -sf $(USBDIR)/hplj1000 $(USBDIR)/hpljP1006
-	ln -sf $(USBDIR)/hplj1000 $(USBDIR)/hpljP1007
-	ln -sf $(USBDIR)/hplj1000 $(USBDIR)/hpljP1008
-	ln -sf $(USBDIR)/hplj1000 $(USBDIR)/hpljP1505
-	$(USBDIR)/hplj1000 install-usermap
-	$(USBDIR)/hplj1005 install-usermap
-	$(USBDIR)/hplj1018 install-usermap
-	$(USBDIR)/hplj1020 install-usermap
-	$(USBDIR)/hpljP1005 install-usermap
-	$(USBDIR)/hpljP1006 install-usermap
-	$(USBDIR)/hpljP1007 install-usermap
-	$(USBDIR)/hpljP1008 install-usermap
-	$(USBDIR)/hpljP1505 install-usermap
+	[ -d $(DESTDIR)$(USBDIR) ] || $(INSTALL) -d -m 755 $(DESTDIR)$(USBDIR)/
+	$(INSTALL) -c -m 755 hplj1000 $(DESTDIR)$(USBDIR)/
+	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hplj1005
+	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hplj1018
+	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hplj1020
+	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1005
+	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1006
+	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1007
+	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1008
+	ln -sf $(USBDIR)/hplj1000 $(DESTDIR)$(USBDIR)/hpljP1505
+	$(DESTDIR)$(USBDIR)/hplj1000 install-usermap
+	$(DESTDIR)$(USBDIR)/hplj1005 install-usermap
+	$(DESTDIR)$(USBDIR)/hplj1018 install-usermap
+	$(DESTDIR)$(USBDIR)/hplj1020 install-usermap
+	$(DESTDIR)$(USBDIR)/hpljP1005 install-usermap
+	$(DESTDIR)$(USBDIR)/hpljP1006 install-usermap
+	$(DESTDIR)$(USBDIR)/hpljP1007 install-usermap
+	$(DESTDIR)$(USBDIR)/hpljP1008 install-usermap
+	$(DESTDIR)$(USBDIR)/hpljP1505 install-usermap
 	# modprobe usblp
-	$(USBDIR)/hplj1000 install-usblp
+	$(DESTDIR)$(USBDIR)/hplj1000 install-usblp
 
 install-hotplug-osx:
 ifeq ($(UNAME),Darwin)
@@ -1061,7 +1061,7 @@ install-filter:
 	    $(INSTALL) -d $(CUPS_SERVERBIN)/filter; \
 	    ln -sf $(BIN)/command2foo2lava-pjl $(CUPS_SERVERBIN)/filter/; \
 	fi; \
-	ln -sf $(BIN)/psicc $(BIN)/foo2zjs-icc2ps
+	ln -sf $(BIN)/psicc $(DESTDIR)$(BIN)/foo2zjs-icc2ps
 
 install-aa:
 	#
