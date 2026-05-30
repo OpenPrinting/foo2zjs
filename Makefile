@@ -33,6 +33,7 @@ SHAREHBPL=$(DESTDIR)$(PREFIX)/share/foo2hbpl
 SHAREDDST=$(DESTDIR)$(PREFIX)/share/foo2ddst
 MANDIR=$(DESTDIR)$(PREFIX)/share/man
 DOCDIR=$(DESTDIR)$(PREFIX)/share/doc/foo2zjs/
+FOOMATICCACHEDIR=$(DESTDIR)/var/cache/foomatic
 INSTALL=install
 ROOT=root
 
@@ -714,10 +715,10 @@ install-foo:
 	#
 	# Clear foomatic cache and rebuild database if needed
 	#
-	rm -rf $(DESTDIR)/var/cache/foomatic/*/*
-	rm -f $(DESTDIR)/var/cache/foomatic/printconf.pickle
-	if [ -d $(DESTDIR)/var/cache/foomatic/compiled ]; then \
-	    cd $(DESTDIR)/var/cache/foomatic/compiled; \
+	rm -rf $(DESTDIR)$(FOOMATICCACHEDIR)/*/*
+	rm -f $(DESTDIR)$(FOOMATICCACHEDIR)/printconf.pickle
+	if [ -d $(DESTDIR)$(FOOMATICCACHEDIR)/compiled ]; then \
+	    cd $(DESTDIR)$(FOOMATICCACHEDIR)/compiled; \
 	    foomatic-combo-xml -O >overview.xml; \
 	fi
 
@@ -1217,7 +1218,7 @@ uninstall: uninstall-aa
 	cd PPD; for ppd in *.ppd; do \
 	    rm -f $(MODEL)/$$ppd.gz; \
 	done;
-	-rm -f /var/cache/foomatic/printconf.pickle
+	-rm -f $(FOOMATICCACHEDIR)/printconf.pickle
 
 #
 # Clean
