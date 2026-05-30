@@ -34,6 +34,11 @@ SHAREDDST=$(DESTDIR)$(PREFIX)/share/foo2ddst
 MANDIR=$(DESTDIR)$(PREFIX)/share/man
 DOCDIR=$(DESTDIR)$(PREFIX)/share/doc/foo2zjs/
 FOOMATICCACHEDIR=$(DESTDIR)/var/cache/foomatic
+MODEL=$(DESTDIR)$(PREFIX)/share/cups/model
+LOCALMODEL=$(DESTDIR)/local/share/cups/model
+MACMODEL=/Library/Printers/PPDs/Contents/Resources
+PPD=$(DESTDIR)$(PREFIX)/share/ppd
+VARPPD=/var/lp/ppd
 INSTALL=install
 ROOT=root
 
@@ -854,11 +859,6 @@ install-extra:
 	    fi; \
 	done
 
-MODEL=$(DESTDIR)$(PREFIX)/share/cups/model
-LOCALMODEL=$(DESTDIR)/local/share/cups/model
-MACMODEL=/Library/Printers/PPDs/Contents/Resources
-PPD=$(DESTDIR)$(PREFIX)/share/ppd
-VARPPD=/var/lp/ppd
 install-ppd:
 	#
 	# Install PPD files for CUPS
