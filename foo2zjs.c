@@ -1870,10 +1870,9 @@ main(int argc, char *argv[])
 	    SaveToner = 0;
 	    EconoMode = 1;
 	}
-    }
 
-    if (Model == MODEL_HP_PRO || Model == MODEL_HP_PRO_CP)
 	JbgOptions[3] = 0;	/* MX = 0 */
+    }
 
     switch (Duplex)
     {
