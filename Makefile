@@ -944,8 +944,8 @@ install-gui:
 
 USBDIR=/etc/hotplug/usb
 UDEVDIR=/etc/udev/rules.d
-LIBUDEVROOTDIR=/lib/udev
-LIBUDEVDIR=/lib/udev/rules.d
+LIBUDEVROOTDIR=$(PREFIX)/lib/udev
+LIBUDEVDIR=$(PREFIX)/lib/udev/rules.d
 RULES=hplj10xx.rules
 #UDEVD=/sbin/udevd
 # For FreeBSD 8.0
