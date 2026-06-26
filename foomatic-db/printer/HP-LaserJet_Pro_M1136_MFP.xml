@@ -22,15 +22,21 @@
       <comments>
         <en>Cartridge containing toner and imaging drum</en>
       </comments>
-    <!--one or more "partno" elements.--></consumables>
+      <partno>CE285A</partno>
+      <partno>CC388A</partno>
+    </consumables>
   </mechanism>
   <url>https://support.hp.com/in-en/product/troubleshooting/hp-laserjet-pro-m1136-multifunction-printer-series/5094778</url>
   <lang>
     <proprietary/>
-  <!--no pjl--><!--No "text"?--></lang>
+    <pjl/>
+    <text>
+      <charset>us-ascii</charset>
+    </text>
+  </lang>
   <autodetect>
 	<parallel>
-	    <ieee1284>MFG:Hewlett-Packard;MDL:HP LaserJet Professional M1136 MFP;CMD:ZJS,HBS,PJL,ACL,HTTP;CLS:PRINTER;DES:HP LaserJet Professional M1136 MFP;FWVER:20140317;</ieee1284>
+	    <ieee1284>MFG:Hewlett-Packard;MDL:HP LaserJet Professional M1136 MFP;CMD:ZJS,HBS,PJL,ACL,HTTP;CLS:PRINTER;DES:HP LaserJet Professional M1136 MFP;</ieee1284>
             <manufacturer>Hewlett-Packard</manufacturer>
 	    <model>HP LaserJet Professional M1136 MFP</model>
 	    <commandset>ZJS,HBS,PJL,ACL,HTTP</commandset>
