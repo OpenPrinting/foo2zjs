@@ -64,7 +64,7 @@
 		<constraint sense="false">
 		    <make>Samsung</make> <model>CLP-300</model>
 		</constraint>
-	    </constraint>
+	    </constraints>
 	</enum_val>
 	<enum_val id="ev/foo2qpdl-Duplex-3">
 	    <ev_longname> <en>Short Edge (Flip)</en> </ev_longname>
@@ -74,7 +74,7 @@
 		<constraint sense="false">
 		    <make>Samsung</make> <model>CLP-300</model>
 		</constraint>
-	    </constraint>
+	    </constraints>
 	</enum_val>
 	<enum_val id="ev/foo2qpdl-Duplex-4">
 	    <ev_longname> <en>Manual Long Edge (Standard)</en> </ev_longname>
