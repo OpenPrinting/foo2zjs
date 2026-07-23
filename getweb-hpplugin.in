@@ -13,12 +13,19 @@ set -e
 
 VERSION='$Id: getweb.in,v 1.114 2015/02/12 00:22:02 rick Exp $'
 
-WGETOPTS="--passive-ftp -q"
+WGETOPTS="-q"
 ARM2HPDL="/usr/bin/arm2hpdl"
 
 if [ $(id -ru) -ne 0 ]; then
     echo "You need to be root"
     exit 1
+fi
+
+if [ "x$XDG_CACHE_HOME" != "x" ]; then
+    FOO2ZJS_CACHE="$XDG_CACHE_HOME/foo2zjs"
+else
+    mkdir "$HOME/.cache/foo2zjs" 2>/dev/null || true
+    FOO2ZJS_CACHE="$HOME/.cache/foo2zjs"
 fi
 
 
@@ -127,8 +134,9 @@ fi
 putfw() {
     inputname=$1
     outputname=$2
-    $ARM2HPDL $inputname > /lib/firmware/hp/$outputname
-    rm $inputname
+    #$ARM2HPDL $inputname > /lib/firmware/hp/$outputname
+    cat "$FOO2ZJS_CACHE/hpplugin/$inputname" > /lib/firmware/hp/$outputname
+    #rm $inputname
 }
 
 puticm() {
@@ -166,6 +174,34 @@ gettgz() {
     rm $file
 }
 
+get_hpplugin() {
+    hpplugin_url="https://www.openprinting.org/download/printdriver/auxfiles/HP/plugins/hplip-3.26.4-plugin.run"
+    hpplugin_name="hplip-3.26.4-plugin.run"
+    hpplugin_sha1sum="57e993b6aad76143e3a321d35c10e58531e44f59"
+
+    hpplugin_file=
+    hpplugin_cache=
+    hpplugin_file="$FOO2ZJS_CACHE/$hpplugin_name"
+    hpplugin_cache="$FOO2ZJS_CACHE/hpplugin"
+
+    if ! [ -f "$hpplugin_file" ]; then
+        wget $WGETOPTS -O $hpplugin_file "$hpplugin_url" ||
+            error "Couldn't download $hpplugin_url"
+
+        echo "$hpplugin_sha1sum" "$hpplugin_file" | sha1sum -c ||
+            error "Couldn't validate sha1 checksum of $hpplugin_url"
+    fi
+
+    if ! [ -d "$hpplugin_cache" ]; then
+        chmod +x "$hpplugin_file"
+        "$hpplugin_file" --noexec --nochown --target "$hpplugin_cache"
+    fi
+
+    for i in "$hpplugin_cache"/*.fw.gz; do
+        gunzip "$i"
+    done
+}
+
 copyright() {
     echo
     echo "$1"
@@ -175,68 +211,39 @@ copyright() {
 getone() {
     case "$1" in
     lj1000|1000)
-	gettgz \
-	    https://www.quirinux.org/printers sihp1000.tar.gz \
-	    ""
-	#echo "provided"
-	#getexe \
-	    #ftp://ftp.hp.com/pub/softlib/software1/lj1488/lj-1145-2 \
-	    #lj1488en.exe \
-	    #sihp1000.img
+	get_hpplugin
 	copyright "(c) Copyright Hewlett-Packard 2001"
-	putfw sihp1000.img sihp1000.dl
+	putfw hp_laserjet_1000.fw sihp1000.dl
 	;;
     lj1005|1005)
-	gettgz \
-	    https://www.quirinux.org/printers sihp1005.tar.gz \
-	    ""
-	#echo "provided"
-	#getexe \
-	    #ftp://ftp.hp.com/pub/softlib/software2/COL2222/lj-10067-2 \
-	    #lj1005hostbased-en.exe \
-	    #sihp1005.img
+	get_hpplugin
 	copyright "(c) Copyright Hewlett-Packard 2002"
-	gettgz \
-	    https://www.quirinux.org/printers sihpP1005.tar.gz \
-	    ""
-	copyright "(c) Copyright Hewlett-Packard 2009"
-	putfw sihp1005.img sihp1005.dl
+	putfw hp_laserjet_1005_series.fw sihp1005.dl
 	;;
     lj1018|1018)
-	gettgz \
-	    https://www.quirinux.org/printers sihp1018.tar.gz \
-	    ""
+	get_hpplugin
 	copyright "(c) Copyright Hewlett-Packard 2005"
-	putfw sihp1018.img sihp1018.dl
+	putfw hp_laserjet_1018.fw sihp1018.dl
 	;;
     lj1020|1020)
-	# http://ftp.hp.com/pub/softlib/software8/COL14041/lj-39322-2/hp_LJ_1020-1022_Full_Solution.exe
-	gettgz \
-	    https://www.quirinux.org/printers sihp1020.tar.gz \
-	    ""
+	get_hpplugin
 	copyright "(c) Copyright Hewlett-Packard 2005"
-	putfw sihp1020.img sihp1020.dl
+	putfw hp_laserjet_1020.fw sihp1020.dl
 	;;
     [pP]100[57])
-	gettgz \
-	    https://www.quirinux.org/printers sihpP1005.tar.gz \
-	    ""
+	get_hpplugin
 	copyright "(c) Copyright Hewlett-Packard 2009"
-	putfw sihpP1005.img sihpP1005.dl
+	putfw hp_laserjet_p1005.fw sihpP1005.dl
 	;;
     [pP]100[68])
-	gettgz \
-	    https://www.quirinux.org/printers sihpP1006.tar.gz \
-	    ""
+	get_hpplugin
 	copyright "(c) Copyright Hewlett-Packard 2009"
-	putfw sihpP1006.img sihpP1006.dl
+	putfw hp_laserjet_p1006.fw sihpP1006.dl
 	;;
     [pP]1505)
-	gettgz \
-	    https://www.quirinux.org/printers sihpP1505.tar.gz \
-	    ""
+	get_hpplugin
 	copyright "(c) Copyright Hewlett-Packard 2009"
-	putfw sihpP1505.img sihpP1505.dl
+	putfw hp_laserjet_p1505.fw sihpP1505.dl
 	;;
     2200dl|2200)
 	if true; then

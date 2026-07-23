@@ -200,6 +200,7 @@ FILES	=	\
 		foomatic-db/*/*.xml \
 		foomatic-test \
 		getweb.in \
+		getweb-hpplugin.in \
 		osx-hotplug/Makefile \
 		osx-hotplug/*.m \
 		osx-hotplug/*.1in \
@@ -390,7 +391,7 @@ JBGOPTS=-m 16 -d 0 -p 92	# Equivalent options for pbmtojbg
 #
 # The usual build rules
 #
-all:	all-test $(PROGS) $(BINPROGS) $(SHELLS) getweb \
+all:	all-test $(PROGS) $(BINPROGS) $(SHELLS) getweb getweb-hpplugin \
 	all-osx-hotplug man doc \
 	all-done
 
@@ -555,6 +556,13 @@ foo2zjs-wrapper9: foo2zjs-wrapper9.in Makefile
 
 
 getweb: getweb.in Makefile
+	[ ! -f $@ ] || chmod +w $@
+	sed < $@.in > $@ \
+	    -e "s@\$${URLZJS}@$(URLZJS)@" \
+	    -e 's@^PREFIX=.*@PREFIX=$(PREFIX)@' || (rm -f $@ && exit 1)
+	chmod 555 $@
+
+getweb-hpplugin: getweb-hpplugin.in Makefile
 	[ ! -f $@ ] || chmod +w $@
 	sed < $@.in > $@ \
 	    -e "s@\$${URLZJS}@$(URLZJS)@" \
@@ -1246,6 +1254,7 @@ clean:
 	-rm -f sihp*.dl
 	-rm -f *.tar.gz
 	-rm -f getweb
+	-rm -f getweb-hpplugin
 	-rm -f patch.db
 	-rm -f $(MANPAGES) manual.pdf
 	-rm -f *.zjs *.zm *.zc *.zc? *.zc?? *.oak *.pbm *.pksm *.cmyk
