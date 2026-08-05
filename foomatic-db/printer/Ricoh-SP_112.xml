@@ -39,6 +39,15 @@
 	</parallel>
   </autodetect>
 -->
+  <autodetect>
+	<usb>
+	    <ieee1284>MFG:RICOH ;CMD:GDI;MDL:SP 112 DDST;CLS:PRINTER;</ieee1284>
+	    <manufacturer>RICOH</manufacturer>
+	    <model>SP 112 DDST</model>
+	    <commandset>GDI</commandset>
+	    <description>Ricoh SP 112 DDST</description>
+	</usb>
+  </autodetect>
   <functionality>B</functionality>
   <driver>foo2ddst</driver>
   <!--no "contrib_url"-->

@@ -71,6 +71,7 @@ Normal Options:
 -o orient         For N-up: -op is portrait, -ol is landscape, -os is seascape.
 
 Printer Tweaking Options:
+-H                Send PJL HOLD=OFF.  Required by some Ricoh printers.
 -u <xoff>x<yoff>  Set offset of upper left printable in pixels [varies]
 -l <xoff>x<yoff>  Set offset of lower right printable in pixels [varies]
 -L mask           Send logical clipping values from -u/-l in ZjStream [3]
@@ -179,6 +180,7 @@ GAMMAFILE=
 INTENT=0
 GSOPTS=
 EXTRAPAD=
+HOLD=
 SAVETONER=
 DENSITY=3	#Medium
 NUP_ORIENT=
@@ -189,7 +191,7 @@ case `$GSBIN --version` in
     QUALITY=1
     ;;
 esac
-while getopts "1:23456789o:b:cC:d:g:l:u:L:m:n:p:q:r:s:tT:ABS:D:G:I:PX:Vh?" opt
+while getopts "1:23456789o:b:cC:d:g:l:u:L:m:n:p:q:r:s:tT:ABHS:D:G:I:PX:Vh?" opt
 do
 	case $opt in
 	b)	GSBIN="$OPTARG";;
@@ -209,6 +211,7 @@ do
 	L)	CLIP_LOG="-L $OPTARG";;
 	A)	AIB=-A;;
 	B)	BC=-B;;
+	H)	HOLD=-H;;
 	C)	COLORMODE="$OPTARG";;
 	S)	COLOR2MONO="-S$OPTARG";;
 	D)	DEBUG="$OPTARG";;
@@ -662,7 +665,7 @@ $PREFILTER \
 | foo2ddst -r$RES -g$DIM -p$PAPER -m$MEDIA -n$COPIES -d$DUPLEX -s$SOURCE \
 	    $COLOR $CLIP_UL $CLIP_LR $CLIP_LOG $SAVETONER -T$DENSITY \
 	    -J "$LPJOB" -U "$USER" \
-	    $BC $AIB $COLOR2MONO $NOPLANES $EXTRAPAD -D$DEBUG
+	    $BC $AIB $HOLD $COLOR2MONO $NOPLANES $EXTRAPAD -D$DEBUG
 
 #
 #	Log the command line, for debugging and problem reports
@@ -673,7 +676,7 @@ if [ -x /usr/bin/logger ]; then
     logger -t "$BASENAME" -p lpr.info -- \
 	"foo2ddst -r$RES -g$DIM -p$PAPER -m$MEDIA \
 -n$COPIES -d$DUPLEX -s$SOURCE $COLOR $CLIP_UL $CLIP_LR $CLIP_LOG \
-$SAVETONER -T$DENSITY $BC $AIB $COLOR2MONO $NOPLANES $EXTRAPAD"
+$SAVETONER -T$DENSITY $BC $AIB $HOLD $COLOR2MONO $NOPLANES $EXTRAPAD"
 fi
 
 #

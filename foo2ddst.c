@@ -102,6 +102,7 @@ int	PageNum = 0;
 int	RealWidth;
 int	EconoMode = 0;
 int	PrintDensity = 3;
+int	PjlHoldOff = 0;
 
 int	IsCUPS = 0;
 
@@ -187,6 +188,7 @@ usage(void)
 "-A                AllIsBlack: convert C=1,M=1,Y=1 to just K=1\n"
 "-B                BlackClears: K=1 forces C,M,Y to 0\n"
 "                  -A, -B work with bitcmyk input only\n"
+"-H                Send PJL HOLD=OFF.  Required by some Ricoh printers.\n"
 "-P                Do not output START_PLANE codes.  May be needed by some\n"
 "                  some black and white only printers.\n"
 "-X padlen         Add extra zero padding to the end of BID segments [%d]\n"
@@ -691,6 +693,8 @@ start_doc(FILE *fp)
     fprintf(fp, "@PJL SET COMPRESS=JBIG\r\n");
     fprintf(fp, "@PJL SET USERNAME=%s\r\n", Username ? Username : "root");
     fprintf(fp, "@PJL SET COVER=OFF\r\n");
+    if (PjlHoldOff)
+	fprintf(fp, "@PJL SET HOLD=OFF\r\n");
 
 #if 0
     fwrite(header, 1, sizeof(header), fp);
@@ -1422,7 +1426,7 @@ main(int argc, char *argv[])
     int i, j;
 
     while ( (c = getopt(argc, argv,
-		    "cd:g:n:m:p:r:s:tT:u:l:L:ABPJ:S:U:X:D:V?h")) != EOF)
+		    "cd:g:n:m:p:r:s:tT:u:l:L:ABHPJ:S:U:X:D:V?h")) != EOF)
 	switch (c)
 	{
 	case 'c':	Mode = MODE_COLOR; break;
@@ -1473,6 +1477,7 @@ main(int argc, char *argv[])
 			break;
 	case 'A':	AllIsBlack = !AllIsBlack; break;
 	case 'B':	BlackClears = !BlackClears; break;
+	case 'H':	PjlHoldOff = 1; break;
 	case 'P':	OutputStartPlane = !OutputStartPlane; break;
 	case 'J':	if (optarg[0]) Filename = optarg; break;
 	case 'U':	if (optarg[0]) Username = optarg; break;

@@ -1279,7 +1279,7 @@ zjsdecode.o: jbig.h zjs.h
 #
 # foo2* Regression tests
 #
-test:		testzjs testhp
+test:		testzjs testhp testddst
 	@ls -l *.z* #*.oak
 	#
 	# All regression tests passed.
@@ -1359,6 +1359,20 @@ lj2600.zc1: testpage.ps foo2hp2600-wrapper foo2hp Makefile FRC
 	PATH=.:$$PATH time -p foo2hp2600-wrapper -c testpage.ps > $@
 	@got=`md5sum $@`; grep -q "$$got" regress.txt || \
 	    { echo "*** Test failure, got $$got"; ls -l $@; exit 1; }
+
+#
+# foo2ddst Regression tests
+#
+testddst: testpage.ps foo2ddst-wrapper foo2ddst foo2zjs-pstops FRC
+	@set -e; nohold=`mktemp`; hold=`mktemp`; \
+	trap 'rm -f "$$nohold" "$$hold"' EXIT HUP INT TERM; \
+	PATH=.:$$PATH foo2ddst-wrapper testpage.ps > "$$nohold"; \
+	PATH=.:$$PATH foo2ddst-wrapper -H testpage.ps > "$$hold"; \
+	if grep -a -q '@PJL SET HOLD=OFF' "$$nohold"; then \
+	    echo "*** Test failure, HOLD=OFF present without -H"; exit 1; \
+	fi; \
+	grep -a -q '@PJL SET HOLD=OFF' "$$hold" || \
+	    { echo "*** Test failure, HOLD=OFF missing with -H"; exit 1; }
 
 #
 # foo2oak Regression tests

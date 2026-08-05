@@ -29,7 +29,7 @@
 *LanguageEncoding: ISOLatin1
 *PCFileName:	"FOO2DDST.PPD"
 *Manufacturer:	"Ricoh"
-*Product:	"(SP 112)"
+*Product:	"(SP 112 DDST)"
 *cupsVersion:	1.0
 *cupsManualCopies: True
 *cupsModelNumber:  2
@@ -61,7 +61,7 @@
 *Throughput:	"1"
 *LandscapeOrientation: Plus90
 *TTRasterizer:	Type42
-*1284DeviceID: "MFG:Ricoh;MDL:SP 112;DRV:Dfoo2ddst,R1,M0,TF;"
+*1284DeviceID: "MFG:RICOH ;MDL:SP 112 DDST;CMD:GDI;DRV:Dfoo2ddst,R1,M0,TF;"
 
 *driverName foo2ddst: ""
 *driverType F/Filter: ""
@@ -88,6 +88,9 @@
 
 *FoomaticIDs: Ricoh-SP_112 foo2ddst
 *FoomaticRIPCommandLine: "foo2ddst-wrapper %A"
+
+*FoomaticRIPOption PrinterType: enum CmdLine A 110
+*FoomaticRIPOptionSetting PrinterType=Ricoh: "-H "
 
 *OpenGroup: General/General
 
@@ -174,9 +177,11 @@
 *OpenUI *InputSlot/Media Source: PickOne
 *FoomaticRIPOption InputSlot: enum CmdLine A
 *OrderDependency: 150 AnySetup *InputSlot
-*DefaultInputSlot: Tray1
+*DefaultInputSlot: Auto
 *InputSlot Tray1/Tray 1: "%% FoomaticRIPOptionSetting: InputSlot=Tray1"
 *FoomaticRIPOptionSetting InputSlot=Tray1: "-s1 "
+*InputSlot Auto/Auto selection: "%% FoomaticRIPOptionSetting: InputSlot=Auto"
+*FoomaticRIPOptionSetting InputSlot=Auto: "-s3 "
 *InputSlot Manual/Manual Feed: "%% FoomaticRIPOptionSetting: InputSlot=Manual"
 *FoomaticRIPOptionSetting InputSlot=Manual: "-s2 "
 *CloseUI: *InputSlot
