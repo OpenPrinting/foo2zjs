@@ -1462,6 +1462,7 @@ ppd:
 	    *P160*)		driver=foo2zjs-z2;; \
 	    *CP102*)		driver=foo2zjs-z3;; \
 	    *1635*|*2035*)      driver=foo2oak-z1;; \
+	    *TASKalfa*)         driver=foo2oak-z1;; \
 	    *1600W|*16[89]0*)   driver=foo2lava;; \
 	    *4690*)		driver=foo2lava;; \
 	    *2530*|*24[89]0*)   driver=foo2lava;; \

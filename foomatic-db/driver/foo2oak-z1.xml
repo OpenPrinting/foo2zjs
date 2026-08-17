@@ -16,5 +16,7 @@
     <printers>
 	<printer><id>printer/Kyocera-KM-1635</id></printer>
 	<printer><id>printer/Kyocera-KM-2035</id></printer>
+	<printer><id>printer/Kyocera-TASKalfa-180</id></printer>
+	<printer><id>printer/Kyocera-TASKalfa-220</id></printer>
     </printers>
 </driver>
