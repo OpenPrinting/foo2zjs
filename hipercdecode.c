@@ -43,6 +43,8 @@ int	PrintHexOffset = 0;
 FILE	*FpRaw[4];
 FILE	*FpDec[4];
 
+unsigned char blk[50*1024*1024];
+
 void
 debug(int level, char *fmt, ...)
 {
@@ -143,7 +145,6 @@ print_bih(unsigned char bih[20])
 	((yd >> bih[1]) +  ((((1UL << bih[1]) - 1) & xd) != 0) + l0 - 1) / l0,
 	bih[1] - bih[0], bih[2]);
 }
-	    unsigned char blk[50*1024*1024];
 
 void
 decode(FILE *fp)
@@ -220,7 +221,6 @@ decode(FILE *fp)
 	{
 	    int	blklen;
 	    int	i;
-//	    unsigned char blk[50*1024*1024];
 
 	    if (PrintOffset) printf("%d:	", curOff);
 	    else if (PrintHexOffset) printf("%6x:	", curOff);
@@ -229,8 +229,10 @@ decode(FILE *fp)
 	    if (rc != 1) break;
 	    curOff += 4;
 	    reclen -= 4;
-	    
+
 	    blklen = be32(blklen);
+	    if (blklen >= sizeof(blk))
+		error(1, "BLKLEN=%d exceeds blk[%d] size.\n", blklen, sizeof(blk));
 	    rc = fread(&blk, blklen, 1, fp);
 	    if (rc != 1) return;
 	    curOff += blklen;
