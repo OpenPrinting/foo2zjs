@@ -1,0 +1,50 @@
+<option type="enum" id="opt/foo2hbpl1-NoBreak">
+    <comments>
+	<en>
+	This option controls which .ICM file to use for color correction.
+	ICM files are stored in directory /usr/share/foo2hbpl/icm/.
+	</en>
+    </comments>
+    <arg_longname> <en>Break large JOB into smaller JOBs</en> </arg_longname>
+    <arg_shortname> <en>JobSize</en> </arg_shortname>
+    <arg_execution>
+	<arg_group>CombinedJobs</arg_group>
+	<arg_order>230</arg_order>
+	<arg_spot>A</arg_spot>
+	<arg_required />
+	<arg_substitution />
+	<arg_proto>-f%s </arg_proto>
+    </arg_execution>
+    <constraints>
+	<constraint sense="true">
+	    <driver>foo2hbpl1</driver>
+	    <arg_defval>ev/foo2hbpl1-NoBreak-0</arg_defval>
+	</constraint>
+	<constraint sense="true">
+	    <driver>foo2hbpl1-z1</driver>
+	    <arg_defval>ev/foo2hbpl1-NoBreak-0</arg_defval>
+	</constraint>
+    </constraints>
+    <enum_vals>
+	<enum_val id="ev/foo2hbpl1-NoBreak-0">
+	    <ev_longname> <en>No Breaking large JOB</en> </ev_longname>
+	    <ev_shortname> <en>Break0</en> </ev_shortname>
+	    <ev_driverval>0</ev_driverval>
+	</enum_val>
+	<enum_val id="ev/foo2hbpl1-NoBreak-1">
+	    <ev_longname> <en>Break large JOBs into ~5M jobs</en> </ev_longname>
+	    <ev_shortname> <en>Break1</en> </ev_shortname>
+	    <ev_driverval>1</ev_driverval>
+	</enum_val>
+	<enum_val id="ev/foo2hbpl1-NoBreak-2">
+	    <ev_longname> <en>Break large JOBs into ~20M jobs</en> </ev_longname>
+	    <ev_shortname> <en>Break2</en> </ev_shortname>
+	    <ev_driverval>2</ev_driverval>
+	</enum_val>
+	<enum_val id="ev/foo2hbpl1-NoBreak-3">
+	    <ev_longname> <en>Break large JOBs into ~100M jobs</en> </ev_longname>
+	    <ev_shortname> <en>Break3</en> </ev_shortname>
+	    <ev_driverval>3</ev_driverval>
+	</enum_val>
+    </enum_vals>
+</option>

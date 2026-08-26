@@ -31,6 +31,7 @@ SHARESLX=$(PREFIX)/share/foo2slx
 SHAREHC=$(PREFIX)/share/foo2hiperc
 SHAREHBPL=$(PREFIX)/share/foo2hbpl
 SHAREDDST=$(PREFIX)/share/foo2ddst
+SHAREHBPL1=$(PREFIX)/share/foo2hbpl1
 MANDIR=$(PREFIX)/share/man
 DOCDIR=$(PREFIX)/share/doc/foo2zjs/
 INSTALL=install
@@ -144,6 +145,8 @@ FILES	=	\
 		foo2hiperc.c \
 		foo2hiperc.1in \
 		hbpl.h \
+		foo2hbpl1.c \
+		foo2hbpl1.1in \
 		foo2hbpl2.c \
 		foo2hbpl2.1in \
 		foo2ddst.c \
@@ -183,6 +186,8 @@ FILES	=	\
 		foo2slx-wrapper.1in \
 		foo2hiperc-wrapper.in \
 		foo2hiperc-wrapper.1in \
+		foo2hbpl1-wrapper.in \
+		foo2hbpl1-wrapper.1in \
 		foo2hbpl2-wrapper.in \
 		foo2hbpl2-wrapper.1in \
 		foo2ddst-wrapper.in \
@@ -256,7 +261,7 @@ PROGS+=		foo2lava lavadecode foo2qpdl qpdldecode opldecode
 PROGS+=		foo2oak oakdecode
 PROGS+=		foo2slx slxdecode
 PROGS+=		foo2hiperc hipercdecode
-PROGS+=		foo2hbpl2 hbpldecode
+PROGS+=		foo2hbpl1 foo2hbpl2 hbpldecode
 PROGS+=		gipddecode
 PROGS+=		foo2ddst ddstdecode
 ifneq ($(CUPS_SERVERBIN),)
@@ -269,7 +274,7 @@ endif
 SHELLS=		foo2zjs-wrapper foo2oak-wrapper foo2hp2600-wrapper \
 		foo2xqx-wrapper foo2lava-wrapper foo2qpdl-wrapper \
 		foo2slx-wrapper foo2hiperc-wrapper foo2hbpl2-wrapper \
-		foo2ddst-wrapper
+		foo2ddst-wrapper foo2hbpl1-wrapper
 SHELLS+=	foo2zjs-pstops
 SHELLS+=	printer-profile
 MANPAGES=	foo2zjs-wrapper.1 foo2zjs.1 zjsdecode.1
@@ -280,6 +285,7 @@ MANPAGES+=	foo2lava-wrapper.1 foo2lava.1 lavadecode.1 opldecode.1
 MANPAGES+=	foo2qpdl-wrapper.1 foo2qpdl.1 qpdldecode.1
 MANPAGES+=	foo2slx-wrapper.1 foo2slx.1 slxdecode.1
 MANPAGES+=	foo2hiperc-wrapper.1 foo2hiperc.1 hipercdecode.1
+MANPAGES+=	foo2hbpl1-wrapper.1 foo2hbpl1.1
 MANPAGES+=	foo2hbpl2-wrapper.1 foo2hbpl2.1 hbpldecode.1
 MANPAGES+=	foo2ddst-wrapper.1 foo2ddst.1 ddstdecode.1
 MANPAGES+=	gipddecode.1
@@ -308,7 +314,8 @@ GSOPTS=	-q -dBATCH -dSAFER -dQUIET -dNOPAUSE -sPAPERSIZE=letter -r$(GXR)x$(GYR)
 JBGOPTS=-m 16 -d 0 -p 92	# Equivalent options for pbmtojbg
 
 .SUFFIXES: .ps .pbm .pgm .pgm2 .ppm .ppm2 .zjs .cmyk .pksm .zc .zm .jbg \
-	   .cups .cupm .1 .1in .fig .gif .xqx .lava .qpdl .slx .hc .hbpl .ddst
+	   .cups .cupm .1 .1in .fig .gif .xqx .lava .qpdl .slx .hc .hbpl \
+	   .ddst .hbpl1
 
 .fig.gif:
 	fig2dev -L gif $*.fig | giftrans -t "#ffffff" -o $*.gif
@@ -374,6 +381,9 @@ JBGOPTS=-m 16 -d 0 -p 92	# Equivalent options for pbmtojbg
 
 .pbm.hc:
 	./foo2hiperc < $*.pbm > $*.hc
+
+.pbm.hbpl1:
+	./foo2hbpl1 < $*.pbm > $*.hbpl1
 
 .pbm.hbpl:
 	./foo2hbpl2 < $*.pbm > $*.hbpl
@@ -453,6 +463,9 @@ all-done:
 foo2ddst: foo2ddst.o
 	$(CC) $(CFLAGS) -o $@ foo2ddst.o $(LIBJBG) $(LDFLAGS)
 
+foo2hbpl1: foo2hbpl1.o
+	$(CC) $(CFLAGS) -o $@ foo2hbpl1.o $(LDFLAGS)
+
 foo2hbpl2: foo2hbpl2.o
 	$(CC) $(CFLAGS) -o $@ foo2hbpl2.o $(LIBJBG) $(LDFLAGS)
 
@@ -482,6 +495,12 @@ foo2zjs: foo2zjs.o
 
 
 foo2ddst-wrapper: foo2ddst-wrapper.in Makefile
+	[ ! -f $@ ] || chmod +w $@
+	sed < $@.in > $@ \
+	    -e 's@^PREFIX=.*@PREFIX=$(PREFIX)@' || (rm -f $@ && exit 1)
+	chmod 555 $@
+
+foo2hbpl1-wrapper: foo2hbpl1-wrapper.in Makefile
 	[ ! -f $@ ] || chmod +w $@
 	sed < $@.in > $@ \
 	    -e 's@^PREFIX=.*@PREFIX=$(PREFIX)@' || (rm -f $@ && exit 1)
@@ -838,9 +857,12 @@ install-extra:
 		$(INSTALL) -c -m 644 $$i $(SHAREHC)/icm/; \
 	    fi; \
 	done
-	# foo2hbpl ICM files (if any)
+	# foo2hbpl(2) ICM files (if any)
 	$(INSTALL) $(LPuid) $(LPgid) -m 755 -d $(SHAREHBPL)/icm/
 	for i in hbpl*.icm; do \
+	    if [ $$i = hbpl1*.icm ]; then \
+		continue; \
+	    fi; \
 	    if [ -f $$i ]; then \
 		$(INSTALL) -c -m 644 $$i $(SHAREHBPL)/icm/; \
 	    fi; \
@@ -850,6 +872,13 @@ install-extra:
 	for i in ddst*.icm; do \
 	    if [ -f $$i ]; then \
 		$(INSTALL) -c -m 644 $$i $(SHAREDDST)/icm/; \
+	    fi; \
+	done
+	# foo2hbpl1 ICM files (if any)
+	$(INSTALL) $(LPuid) $(LPgid) -m 755 -d $(SHAREHBPL1)/icm/
+	for i in hbpl1*.icm; do \
+	    if [ -f $$i ]; then \
+		$(INSTALL) -c -m 644 $$i $(SHAREHBPL1)/icm/; \
 	    fi; \
 	done
 
@@ -881,6 +910,7 @@ install-ppd:
 	    find $(PPD) -name '*foo2qpdl*' | xargs rm -rf; \
 	    find $(PPD) -name '*foo2slx*' | xargs rm -rf; \
 	    find $(PPD) -name '*foo2hiperc*' | xargs rm -rf; \
+	    find $(PPD) -name '*foo2hbpl1*' | xargs rm -rf; \
 	    find $(PPD) -name '*foo2hbpl*' | xargs rm -rf; \
 	    find $(PPD) -name '*foo2ddst*' | xargs rm -rf; \
 	    [ -d $(PPD)/foo2zjs ] || mkdir $(PPD)/foo2zjs; \
@@ -1173,7 +1203,8 @@ uninstall: uninstall-aa
 	-rm -f $(MANDIR)/man1/foo2xqx*.1 $(MANDIR)/man1/xqxdecode.1
 	-rm -f $(MANDIR)/man1/opldecode.1 $(MANDIR)/man1/rodecode.1
 	-rm -f $(MANDIR)/man1/foo2hiperc*.1 $(MANDIR)/man1/hipercdecode.1
-	-rm -f $(MANDIR)/man1/foo2hbpl*.1 $(MANDIR)/man1/hbpldecode.1
+	-rm -f $(MANDIR)/man1/foo2hbpl1*.1
+	-rm -f $(MANDIR)/man1/foo2hbpl2*.1 $(MANDIR)/man1/hbpldecode.1
 	-rm -f $(MANDIR)/man1/foo2ddst*.1 $(MANDIR)/man1/ddstdecode.1
 	-rm -f $(MANDIR)/man1/gipddecode.1
 	-rm -f $(MANDIR)/man1/arm2hpdl.1 $(MANDIR)/man1/usb_printerid.1
@@ -1187,6 +1218,7 @@ uninstall: uninstall-aa
 	-rm -rf /usr/share/foo2hiperc/
 	-rm -rf /usr/share/foo2hbpl/
 	-rm -rf /usr/share/foo2ddst/
+	-rm -rf /usr/share/foo2hbpl1/
 	-rm -f /usr/bin/arm2hpdl
 	-rm -f /usr/bin/foo2zjs-wrapper /usr/bin/foo2zjs /usr/bin/zjsdecode
 	-rm -f /usr/bin/foo2oak-wrapper /usr/bin/foo2oak /usr/bin/oakdecode
@@ -1197,6 +1229,7 @@ uninstall: uninstall-aa
 	-rm -f /usr/bin/foo2slx-wrapper /usr/bin/foo2slx /usr/bin/slxdecode
 	-rm -f /usr/bin/foo2hiperc-wrapper /usr/bin/foo2hiperc
 	-rm -f /usr/bin/hipercdecode
+	-rm -f /usr/bin/foo2hbpl1-wrapper /usr/bin/foo2hbpl1
 	-rm -f /usr/bin/foo2hbpl2-wrapper /usr/bin/foo2hbpl2
 	-rm -f /usr/bin/hbpldecode
 	-rm -f /usr/bin/foo2ddst-wrapper /usr/bin/foo2ddst /usr/bin/ddstdecode
@@ -1230,7 +1263,7 @@ clean:
 	-rm -f foo2qpdl.o qpdldecode.o
 	-rm -f foo2slx.o slxdecode.o
 	-rm -f foo2hiperc.o hipercdecode.o
-	-rm -f foo2hbpl2.o hbpldecode.o
+	-rm -f foo2hbpl1.o foo2hbpl2.o hbpldecode.o
 	-rm -f opldecode.o gipddecode.o
 	-rm -f foo2dsst.o ddstdecode.o
 	-rm -f command2foo2lava-pjl.o
@@ -1480,6 +1513,13 @@ ppd:
 	    *C5[12568][05]0*)   driver=foo2hiperc;; \
 	    *CLP*|*CLX*|*6110*) driver=foo2qpdl;; \
 	    *ML-167*)		driver=foo2qpdl;; \
+	    *1250c*)		driver=foo2hbpl1;; \
+	    *C1660*|*C1760*)	driver=foo2hbpl1;; \
+	    *C1700*)		driver=foo2hbpl1;; \
+	    *CP105*)		driver=foo2hbpl1;; \
+	    *6000B*|*6010N*)	driver=foo2hbpl1;; \
+	    *HBPL1_Printer*)	driver=foo2hbpl1;; \
+	    *HBPL1_z1_Printer*)	driver=foo2hbpl1;; \
 	    *6015*|*1355*)	driver=foo2hbpl2;; \
 	    *C1765*)		driver=foo2hbpl2;; \
 	    *CX17*)		driver=foo2hbpl2;; \
@@ -1489,7 +1529,6 @@ ppd:
 	    *M215*)		driver=foo2hbpl2;; \
 	    *M1400*)		driver=foo2hbpl2;; \
 	    *SP_*)		driver=foo2ddst;; \
-	    *bizhub*)		driver=foo2ddst;; \
 	    *)                  driver=foo2zjs;; \
 	    esac; \
 	    echo $$driver - $$printer; \
@@ -1542,6 +1581,7 @@ endif
 	    -e "s@\$${URLHC}@$(URLHC)@" \
 	    -e "s@\$${URLHBPL}@$(URLHBPL)@" \
 	    -e "s@\$${URLDDST}@$(URLDDST)@" \
+	    -e "s@\$${URLHBPL1}@$(URLHBPL1)@" \
 	    -e "s/\$${MODpage}/$$MODpage/" \
 	    -e "s/\$${MODver}/$$MODver/"
 	chmod a-w $*.1
@@ -1576,6 +1616,8 @@ install-man: man
 	$(INSTALL) -c -m 644 foo2hiperc.1 $(MANDIR)/man1/
 	$(INSTALL) -c -m 644 foo2hiperc-wrapper.1 $(MANDIR)/man1/
 	$(INSTALL) -c -m 644 hipercdecode.1 $(MANDIR)/man1/
+	$(INSTALL) -c -m 644 foo2hbpl1.1 $(MANDIR)/man1/
+	$(INSTALL) -c -m 644 foo2hbpl1-wrapper.1 $(MANDIR)/man1/
 	$(INSTALL) -c -m 644 foo2hbpl2.1 $(MANDIR)/man1/
 	$(INSTALL) -c -m 644 foo2hbpl2-wrapper.1 $(MANDIR)/man1/
 	$(INSTALL) -c -m 644 hbpldecode.1 $(MANDIR)/man1/
@@ -1695,6 +1737,7 @@ URLSLX=http://foo2slx.rkkda.com
 URLHC=http://foo2hiperc.rkkda.com
 URLHBPL=http://foo2hbpl.rkkda.com
 URLDDST=http://foo2ddst.rkkda.com
+URLHBPL1=https://github.com/OpenPrinting/foo2zjs
 FTPSITE=~/.ncftp-website
 FTPOPTS=
 FTPOPTS=-S
@@ -1720,6 +1763,7 @@ foo2zjs.html foo2oak.html foo2hp.html \
 	    -e "s@\$${URLQPDL}@$(URLQPDL)@g" \
 	    -e "s@\$${URLSLX}@$(URLSLX)@g" \
 	    -e "s@\$${URLHC}@$(URLHC)@g" \
+	    -e "s@\$${URLHBPL1}@$(URLHBPL1)@g" \
 	    -e "s@\$${URLHBPL}@$(URLHBPL)@g" \
 	    -e "s@\$${URLDDST}@$(URLDDST)@g" \
 	    -e "s@\$${PRODUCT}@$$PRODUCT@g" \

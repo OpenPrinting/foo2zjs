@@ -132,6 +132,22 @@ GENERAL
 	- Oki C5100n/C5150n/C5200n
 	- Oki C5500n/C5600n/C5800n
 
+    FOO2HBPL1
+    ---------
+    foo2hbpl1 converts Ghostscript pbmraw, pgmraw, ppmraw, or pamcmyk32
+    output formats to monochrome or color HBPL version 1 streams. Only
+    foo2hbpl1 and the wrapper are added here, and they work with:
+
+	- Dell 1250c
+	- Dell C1660
+	- Dell C1760
+	- Epson AcuLaser C1700
+	- Fuji-Xerox DocuPrint CP105
+	- Generic-HBPL1_Printer
+	- Generic-HBPL1_z1_Printer
+	- Xerox Phaser 6000B
+	- Xerox Phaser 6010N
+
     FOO2HBPL2
     ---------
     foo2hbpl2 converts Ghostscript pbmraw, bitcmyk, or pksmraw output  for‐

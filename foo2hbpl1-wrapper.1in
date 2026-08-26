@@ -1,0 +1,255 @@
+'\" t
+.TH foo2hbpl1-wrapper 1 "${MODpage}" "foo2hbpl1-wrapper ${MODver}"
+#ifndef OLDGROFF
+#include "macros.man"
+#endif
+'\"==========================================================================
+'\"	MANUAL PAGE SOURCE
+'\"==========================================================================
+.SH NAME
+foo2hbpl1-wrapper \- Convert Postscript into a HBPLv1 printer stream
+.SH SYNOPSIS
+.B foo2hbpl1-wrapper
+.RI [ options "] [" ps-file ]
+.SH DESCRIPTION
+.B foo2hbpl1-wrapper
+is a Foomatic compatible printer wrapper for the \fBfoo2hbpl1\fP printer
+driver. This script reads a Postscript \fIps-file\fP or standard input and
+converts it to Host Based Printer Language (v1) format for driving the
+Dell 1250c, Dell C1660w, Dell C1760w,
+Epson AcuLaser C1700, Fuji-Xerox CP105b,
+Xerox Phaser 6000B and the Xerox Phaser 6010N printers.
+.P
+This script can be used in a standalone fashion, but is intended to
+be called from a printer spooler system which uses the Foomatic
+printer database.
+
+.SH COMMAND LINE OPTIONS
+.SS Normal Options
+These are the options used to select the parameters of a
+print job that are usually controlled on a per job basis.
+.TP
+.BI \-c
+Print in color (else monochrome).
+.TP
+.BI \-C\0 colormode
+Color correction mode [0].
+.TS
+n l .
+10	ICM color profile (using \-G *.icm file)
+.TE
+.TP
+.BI \-m\0 media
+Media code to send to printer [1] or [6].
+.TS
+l r r r r.
+_
+Media	\-m	\-m	\-m	\-m
+\^	\-z0	\-z0	\-z1	\-z1
+\^	side1	side2	side1	side2
+_
+plain	1	8	1	8
+thick	2	9	2	9
+high-quality	3	10	3	10
+coated	4	11	4	11
+label	5	\-	5	\-
+envelope	6	\-	6	\-
+recycled	7	12	7	12
+letterhead	\-	\-	13	14
+preprinted	\-	\-	15	16
+prepunched	\-	\-	17	18
+color	\-	\-	19	20
+user1	\-	\-	21	22
+special	\-	\-	23	24
+.TE
+.TP
+.BI \-p\0 paper
+Paper code sizes autodetected by printer [0].
+.TS
+box;
+n l | n l.
+0	Letter	1	Legal
+2	A4	3	Executive
+\-	\-	\-	\-
+6	env #10	7	env Monarch
+8	env C5	9	env DL
+\-	\-	11	B5jis
+\-	\-	\-	\-
+\-	\-	15	A5
+205	Folio	255	Custom (X x Y)
+.TE
+.TP
+.BI \-n\0 copies
+Number of copies of each page [1]. Only available for \-z1 printers.
+.TS
+l l l.
+_
+Model	Range	Example printer(s)
+_
+z0	\-	Dell 1250c / C1660 / C1760
+z1	1-999	Xerox 6000 / 6010
+.TE
+.TP
+.BI \-t\0
+Draft mode. Every other pixel is white.
+.TP
+.BI "\-2 \-3 \-4 \-5 \-6 \-8 \-9 \-10 \-12 \-14 \-15 \-16 \-18"
+Print in N-up.  Requires the \fBpsutils\fP package.
+.TP
+.BI \-o\0 orient
+Orientation used for N-up.
+.TS
+l l l.
+_
+Orientation	Code	Direction
+_
+
+Portrait	\-op	(normal)
+Landscape	\-ol	(rotated 90 degrees anticlockwise)
+Seascape	\-os	(rotated 90 degrees clockwise)
+.TE
+.SS Printer Tweaking Options
+These are the options used to customize the operation of \fBfoo2hbpl1\fP
+for a particular printer.
+.TP
+.BI \-u\0 xoff x yoff
+Set the offset of the start of the printable region from the
+upper left corner, in pixels [20x20].
+.TP
+.BI \-l\0 xoff x yoff
+Set the offset of the end of the printable region from the
+lower right corner, in pixels [20x20].
+.TP
+.BI \-L\0 mask
+Send logical clipping amounts implied by \-u/-l in the HBPL1 Stream [3].
+\fBfoo2hbpl1-wrapper\fP always runs Ghostscript with the ideal page
+dimensions, so that the scale of the image is correct,
+regardless whether or not the printer has unprintable regions.
+This option is used to move the position of the clipped image
+back to where it belongs on the page.  The default is to send
+the amount which was clipped by \-u and \-l, and should be
+good in most cases.
+.TS
+l l.
+_
+Code	Clipping
+_
+\-L0	don't send any logical clipping amounts
+\-L1	only send Y clipping amount
+\-L2	only send X clipping amount
+\-L3	send both X and Y clipping amounts
+.TE
+.TP
+.BI \-e\0
+Do not RESET Printer before printing a JOB. This is useful if you need
+to preset custom adjustments before printing. \-z1 printers are default
+RESET before printing unless you disable with \-e.
+.TP
+.BI \-f\0 size
+If large print JOBs exceed this size, then break it down into more than
+one JOB so that they remain near or below a given size [0].
+.TS
+l l.
+_
+Code	How to handle this print JOB if it is very large
+_
+\-f0	default, each JOB remains as one JOB
+\-f1	break JOBs larger than ~5MB into one or more JOBs
+\-f2	break JOBs larger than ~20MB into one or more JOBs
+\-f3	break JOBs larger than ~100MB into one or more JOBs
+.TE
+.TP
+.BI \-A
+AllIsBlack: convert C=1,M=1,Y=1 to just K=1. Works with color input only.
+.TP
+.BI \-B
+BlackClears: K=1 forces C,M,Y to 0. Works with color input only.
+.TP
+.BI \-z\0 model
+Model. Default is [0].
+.TS
+l l.
+_
+Model	Example printer(s)
+_
+z0	Dell 1250c / C1660 / C1760
+z1	Xerox Phaser 6000B / 6010N
+.TE
+.SS Color Tweaking Options
+These are the options used to control the quality of color output.
+Color correction is currently a WORK IN PROGRESS.
+.TP
+.BI \-g\0 gsopts
+Additional options to pass to Ghostscript, such as \-g\(lq-dDITHERPPI=nnn\(rq,
+etc.  This option may appear more than once.
+.TP
+.BI \-G\0 profile.icm
+Convert \fIprofile.icm\fP to a Postscript color rendering
+dictionary (CRD) using \fBfoo2zjs-icc2ps\fP and
+adjust the printer colors by using the Postscript \fBsetcolorrendering\fP
+operator.  (WORK IN PROGRESS).
+.TP
+.BI \-G\0 gamma-file.ps
+Prepend \fIgamma-file.ps\fP to the Postscript input to perform
+color correction using the \fBsetcolortransfer\fP Postscript operator.
+For example, the file might contain:
+.br
+{0.333 exp} {0.333 exp} {0.333 exp} {0.333 exp} setcolortransfer
+.TP
+.BI \-I\0 intent
+Select profile intent from the ICM file.
+0=Perceptual, 1=Colorimetric, 2=Saturation, 3=Absolute.
+Default is 0 (perceptual).
+.SS Debugging Options
+These options are used for debugging \fBfoo2hbpl1\fP and its wrapper.
+.TP
+.BI \-S\0 plane
+Output just a single color plane from a color print and print it
+on the black plane. The default is to output all color planes.
+.TS
+l l.
+_
+Code	Color Plane
+_
+\-S1	Cyan
+\-S2	Magenta
+\-S3	Yellow
+\-S4	Black
+.TE
+.TP
+.BI \-D\0 level
+Set Debug level [0].
+
+.SH EXAMPLES
+Create a monochrome HBPL1v1 from a Postscript document,
+examine it, and then print it using a RAW print queue:
+
+.RS
+.nf
+foo2hbpl1-wrapper testpage.ps > testpage.prn
+hbpldecode < testpage.prn
+lpr \-P raw testpage.prn
+.fi
+.RE
+.P
+Create a color HBPL1v1 stream from a Postscript document:
+
+.RS
+.nf
+foo2hbpl1-wrapper \-c testpage.ps > testpage.prn
+.fi
+.RE
+
+.SH FILES
+.BR /usr/bin/foo2hbpl1-wrapper
+.SH SEE ALSO
+.BR foo2hbpl1 (1),
+.BR hbpldecode (1)
+.SH "AUTHOR"
+Rick Richardson <rick.richardson@comcast.net>
+.br
+${URLHBPL1}/
+'\"
+'\"
+'\"
+.em pdf_outline

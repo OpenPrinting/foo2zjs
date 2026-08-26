@@ -4,7 +4,7 @@
     <arg_longname> <en>N-up Printing</en> </arg_longname>
     <arg_shortname> <en>NupPages</en> </arg_shortname>
     <arg_execution>
-        <arg_group>Miscellaneous</arg_group>
+	<arg_group>Miscellaneous</arg_group>
 	<arg_order>200</arg_order>
 	<arg_spot>A</arg_spot>
 	<arg_required />
@@ -62,6 +62,14 @@
 	</constraint>
 	<constraint sense="true">
 	    <driver>foo2hiperc-z1</driver>
+	    <arg_defval>ev/foo2xxx-Nup-1</arg_defval>
+	</constraint>
+	<constraint sense="true">
+	    <driver>foo2hbpl1</driver>
+	    <arg_defval>ev/foo2xxx-Nup-1</arg_defval>
+	</constraint>
+	<constraint sense="true">
+	    <driver>foo2hbpl1-z1</driver>
 	    <arg_defval>ev/foo2xxx-Nup-1</arg_defval>
 	</constraint>
 	<constraint sense="true">
