@@ -53,11 +53,14 @@ GENERAL
 
 	- Konica Minolta magicolor 2530 DL	B/W and color
 	- Konica Minolta magicolor 2490 MF	B/W and color
-	- Xerox Phaser 6115MFP			B/W and color
 	- Konica Minolta magicolor 2480 MF	B/W and color
 	- Konica Minolta magicolor 1690MF	B/W and color
 	- Konica Minolta magicolor 1680MF	B/W and color
 	- Konica Minolta magicolor 1600W	B/W and color
+	- Konica Minolta magicolor 4690MF	B/W and color
+	- Oki C110				B/W and color
+	- Xerox Phaser 6115MFP			B/W and color
+	- Xerox Phaser 6121MFP			B/W and color
 
     FOO2OAK
     -------
@@ -88,6 +91,7 @@ GENERAL
 	- Samsung CLP-2160	B/W and color
 	- Samsung CLP-3160	B/W and color
 	- Samsung CLP-3175	B/W and color
+	- Samsung CLP-3185	B/W and color
 	- Xerox Phaser 6110	B/W and color
 	- Xerox Phaser 6110MFP	B/W and color
 
@@ -130,7 +134,8 @@ GENERAL
 	- Oki C3300n/C3400n
 	- Oki C3530n MFP
 	- Oki C5100n/C5150n/C5200n
-	- Oki C5500n/C5600n/C5800n
+	- Oki C5500n/C5600n/C5650n/C5800n
+	- Olivetti-d-Color P160W
 
     FOO2HBPL2
     ---------
@@ -149,6 +154,13 @@ GENERAL
 	- Xerox Phaser 3040
 	- Xerox WorkCentre 3045 Multifunction Monochrome Printer 
 	- Xerox WorkCentre 6015 Multifunction Color Printer 
+
+    FOO2DDST
+    --------
+    With this utility, you can print to some Ricoh printers, such as these:
+
+	- Ricoh Aficio SP 112			B/W
+	- Ricoh Aficio SP 201			B/W
 
 Please read the manual pages for more details on the program operation.
 
@@ -176,7 +188,7 @@ BUGS AND DEFICIENCIES
       in ZjStream printers.  It is possible that bugs or subtle
       implementation differences might result in incorrect printer behavior.
 
-AUTHORS
+AUTHORS (PAST HISTORY)
     The foo2zjs engine program began life as Robert Szalai's 'pbmtozjs'
     program.  It also uses Markus Kuhn's JBIG-KIT compression library
     (included, but available at http://www.cl.cam.ac.uk/~mgk25/jbigkit/),
@@ -190,14 +202,19 @@ AUTHORS
     entries for the Minolta/QMS magicolor 2300 DL.
 
     The foo2* engine was written entirely from scratch by Rick Richardson.
+    Past upkeep and maintenance up to approximately 2020, you were able to
+    contact the author at mailto://rick.richardson@comcast.net
 
+    Please see ChangeLog and Git History for more detailed information.
+
+AUTHORS (2025+):
     The latest version of foo2zjs can be found at:
+	home	= ${URLHOME}
+	release	= ${URLHOME}/releases
 
-	${URLZJS}
-	wget ${URLZJS}/foo2zjs.tar.gz
-
-You can contact the current author at mailto://rick.richardson@comcast.net
-I do not read or reply to HTML email or messages sent under an alias.
+    Bugs, problems, improvements can be sent to:
+	issues	= ${URLHOME}/issues
+	patches	= ${URLHOME}/pulls
 
 LICENSE
 This program is free software; you can redistribute it and/or modify

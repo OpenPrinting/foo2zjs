@@ -1617,6 +1617,7 @@ manual.pdf: $(MANPAGES) osx-hotplug/osx-hplj-hotplug.1
 README: README.in
 	rm -f $@
 	sed < $@.in > $@ \
+	    -e "s@\$${URLHOME}@$(URLHOME)@" \
 	    -e "s@\$${URLOAK}@$(URLOAK)@" \
 	    -e "s@\$${URLZJS}@$(URLZJS)@"
 	chmod a-w $@
@@ -1685,16 +1686,17 @@ tarver:
 #	make webworld
 #	make webextra
 #
-URLOAK=http://foo2oak.rkkda.com
-URLZJS=http://foo2zjs.rkkda.com
-URLHP=http://foo2hp.rkkda.com
-URLXQX=http://foo2xqx.rkkda.com
-URLLAVA=http://foo2lava.rkkda.com
-URLQPDL=http://foo2qpdl.rkkda.com
-URLSLX=http://foo2slx.rkkda.com
-URLHC=http://foo2hiperc.rkkda.com
-URLHBPL=http://foo2hbpl.rkkda.com
-URLDDST=http://foo2ddst.rkkda.com
+URLHOME=https://github.com/OpenPrinting/foo2zjs
+URLOAK=$(URLHOME)
+URLZJS=$(URLHOME)
+URLHP=$(URLHOME)
+URLXQX=$(URLHOME)
+URLLAVA=$(URLHOME)
+URLQPDL=$(URLHOME)
+URLSLX=$(URLHOME)
+URLHC=$(URLHOME)
+URLHBPL=$(URLHOME)
+URLDDST=$(URLHOME)
 FTPSITE=~/.ncftp-website
 FTPOPTS=
 FTPOPTS=-S
