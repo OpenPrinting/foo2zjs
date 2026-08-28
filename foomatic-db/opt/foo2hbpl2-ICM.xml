@@ -20,23 +20,18 @@
 	    <driver>foo2hbpl2</driver>
 	    <arg_defval>ev/foo2hbpl2-ICM-none</arg_defval>
 	</constraint>
+	<!-- Color printers -->
 	<constraint sense="true">
-	    <make>Xerox</make>
-	    <model>WorkCenter 6015</model>
+	    <make>Dell</make>
+	    <model>1355</model>
 	    <driver>foo2hbpl2</driver>
 	    <arg_defval>ev/foo2hbpl2-ICM-none</arg_defval>
 	</constraint>
 	<constraint sense="true">
 	    <make>Dell</make>
-	    <model>1355</model>
-	    <driver>foo2hbpl2</driver>
-	    <arg_defval>ev/foo2qpdl-ICM-none</arg_defval>
-	</constraint>
-	<constraint sense="true">
-	    <make>Dell</make>
 	    <model>C1765</model>
 	    <driver>foo2hbpl2</driver>
-	    <arg_defval>ev/foo2qpdl-ICM-none</arg_defval>
+	    <arg_defval>ev/foo2hbpl2-ICM-none</arg_defval>
 	</constraint>
 	<constraint sense="true">
 	    <make>Epson</make>
@@ -46,16 +41,23 @@
 	</constraint>
 	<constraint sense="true">
 	    <make>Fuji Xerox</make>
-	    <model>DocuPrint_CM205</model>
+	    <model>DocuPrint CM205</model>
 	    <driver>foo2hbpl2</driver>
-	    <arg_defval>ev/foo2qpdl-ICM-none</arg_defval>
+	    <arg_defval>ev/foo2hbpl2-ICM-none</arg_defval>
 	</constraint>
 	<constraint sense="true">
 	    <make>Fuji Xerox</make>
-	    <model>DocuPrint_CM215</model>
+	    <model>DocuPrint CM215</model>
 	    <driver>foo2hbpl2</driver>
-	    <arg_defval>ev/foo2qpdl-ICM-none</arg_defval>
+	    <arg_defval>ev/foo2hbpl2-ICM-none</arg_defval>
 	</constraint>
+	<constraint sense="true">
+	    <make>Xerox</make>
+	    <model>WorkCenter 6015</model>
+	    <driver>foo2hbpl2</driver>
+	    <arg_defval>ev/foo2hbpl2-ICM-none</arg_defval>
+	</constraint>
+	<!-- Monochrome printers -->
 	<constraint sense="false">
 	    <make>Epson</make> <model>AcuLaser M1400</model>
 	</constraint>
