@@ -38,34 +38,31 @@
 	</consumables>
 -->
     </mechanism>
-    <url>http://www.office.xerox.com/multifunction-printer/color-multifunction/workcentre-6015/enfo.html</url>
+    <url>https://www.dell.com/support/product-details/en-ca/product/dell-1355cn-cwn/overview</url>
     <lang>
 	<proprietary/>
 	<!--no pjl--><!--No "text"?-->
     </lang>
     <autodetect>
+	<general>
 <!--
-        <parallel>
             <ieee1284>MFG:Xerox;CMD:SPLC;MDL:Phaser 6110;CLS:PRINTER;STATUS:BUSY;</ieee1284>
-            <manufacturer>Xerox</manufacturer>
-            <model>Phaser 6110</model>
             <commandset>SPLC</commandset>
-        </parallel>
 -->
-	<snmp>
-	    <description>Xerox WorkCentre 6015</description>
-	</snmp>
+	    <description>Dell 1355</description>
+	    <manufacturer>Dell</manufacturer>
+	</general>
     </autodetect>
-    <functionality>C</functionality>
+    <functionality>B</functionality>
     <driver>foo2hbpl2</driver>
-    <!--not "unverified"--><!--no "contrib_url"-->
+    <!--not "unverified"-->
+    <contrib_url>https://github.com/OpenPrinting/foo2zjs</contrib_url>
     <comments> <en>
 
-	The Dell 1355 is color multifunction printer with a 2013 street
-	price of $250.
+	The Dell 1355cn (LAN), 1355cnw (LAN,WiFi) are color multifunction
+	printers supported by the foo2hbpl2 open software printer driver.
 
-	These printers are supported by the foo2hbpl2 open software printer
-	driver.
+Throughput = 12
 
     </en> </comments>
 </printer>

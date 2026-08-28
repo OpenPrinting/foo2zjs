@@ -44,25 +44,29 @@
 	<!--no pjl--><!--No "text"?-->
     </lang>
     <autodetect>
+	<parallel>
+	    <!-- 2026aug27: cloned from CM215 and changed to CM205 -->
+	    <ieee1284>MFG:FUJI XEROX;CMD:HBPL;MDL:DocuPrint CM205;CLS:PRINTER;</ieee1284>
 <!--
-        <parallel>
-            <ieee1284>MFG:Xerox;CMD:SPLC;MDL:Phaser 6110;CLS:PRINTER;STATUS:BUSY;</ieee1284>
-            <manufacturer>Xerox</manufacturer>
-            <model>Phaser 6110</model>
-            <commandset>SPLC</commandset>
-        </parallel>
+	    <manufacturer>Fuji Xerox</manufacturer>
+	    <model>DocuPrint CM205 b</model>
+	    <commandset>HBPL</commandset>
 -->
+	</parallel>
+<!--
 	<snmp>
-	    <description>Xerox WorkCentre 6015</description>
+	    <description>Fuji Xerox DocuPrint CM205 fw</description>
 	</snmp>
+-->
     </autodetect>
-    <functionality>C</functionality>
+    <functionality>B</functionality>
     <driver>foo2hbpl2</driver>
-    <!--not "unverified"--><!--no "contrib_url"-->
+    <!--not "unverified"-->
+    <contrib_url>https://github.com/OpenPrinting/foo2zjs</contrib_url>
     <comments> <en>
 
-	The Xerox WorkCentre 6015/B (USB) and Xerox WorkCentre 6015/N (Net)
-	are color multifunction printer with a 2013 street price of $250.
+	The Fuji Xero DocuPrint CM205b (USB) or CM205fw (Net) is a color
+	multifunction printer.
 
 	These printers are supported by the foo2hbpl2 open software printer
 	driver.

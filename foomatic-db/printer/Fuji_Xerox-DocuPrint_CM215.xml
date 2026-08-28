@@ -60,9 +60,10 @@
 	</snmp>
 -->
     </autodetect>
-    <functionality>C</functionality>
+    <functionality>B</functionality>
     <driver>foo2hbpl2</driver>
-    <!--not "unverified"--><!--no "contrib_url"-->
+    <!--not "unverified"-->
+    <contrib_url>https://github.com/OpenPrinting/foo2zjs</contrib_url>
     <comments> <en>
 
 	The Fuji Xero DocuPrint CM215b (USB) or CM215fw (Net) is a color
@@ -70,6 +71,8 @@
 
 	These printers are supported by the foo2hbpl2 open software printer
 	driver.
+
+Throughput = 12
 
     </en> </comments>
 </printer>

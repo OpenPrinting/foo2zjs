@@ -6,7 +6,7 @@
 	<color/>
 	<resolution>
 	    <dpi>
-		<x>1200</x>
+		<x>600</x>
 		<y>600</y>
 	    </dpi>
 	</resolution>
@@ -56,9 +56,10 @@
 	    <description>Epson AcuLaser CX17NF</description>
 	</snmp>
     </autodetect>
-    <functionality>C</functionality>
+    <functionality>B</functionality>
     <driver>foo2hbpl2</driver>
-    <!--not "unverified"--><!--no "contrib_url"-->
+    <!--not "unverified"-->
+    <contrib_url>https://github.com/OpenPrinting/foo2zjs</contrib_url>
     <comments> <en>
 
 	The Epson AcuLaser CX17NF is a color multifunction printer with
@@ -66,6 +67,8 @@
 
 	These printers are supported by the foo2hbpl2 open software printer
 	driver.
+
+Throughput = 12
 
     </en> </comments>
 </printer>

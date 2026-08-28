@@ -2,8 +2,7 @@
     <make>Fuji Xerox</make>
     <model>DocuPrint M215</model>
     <mechanism>
-	<laser/>
-	<color/>
+	<laser/><!--not "color"-->
 	<resolution>
 	    <dpi>
 		<x>1200</x>
@@ -56,9 +55,10 @@
 	    <description>Fuji Xerox DocuPrint M215</description>
 	</snmp>
     </autodetect>
-    <functionality>C</functionality>
+    <functionality>B</functionality>
     <driver>foo2hbpl2</driver>
-    <!--not "unverified"--><!--no "contrib_url"-->
+    <!--not "unverified"-->
+    <contrib_url>https://github.com/OpenPrinting/foo2zjs</contrib_url>
     <comments> <en>
 
 	The Fuji Xerox DocuPrint M215b (USB) or M215fw (network)
@@ -66,6 +66,8 @@
 
 	These printers are supported by the foo2hbpl2 open software printer
 	driver.
+
+Throughput = 24
 
     </en> </comments>
 </printer>

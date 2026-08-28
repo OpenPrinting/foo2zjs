@@ -1,9 +1,9 @@
 <printer id="printer/Fuji_Xerox-DocuPrint_P205">
+    <!-- Xerox: this is a GDI printer -->
     <make>Fuji Xerox</make>
     <model>DocuPrint P205</model>
     <mechanism>
-	<laser/>
-	<color/>
+	<laser/><!--not "color"-->
 	<resolution>
 	    <dpi>
 		<x>1200</x>
@@ -58,7 +58,8 @@
     </autodetect>
     <functionality>C</functionality>
     <driver>foo2hbpl2</driver>
-    <!--not "unverified"--><!--no "contrib_url"-->
+    <!--not "unverified"-->
+    <contrib_url>https://github.com/OpenPrinting/foo2zjs</contrib_url>
     <comments> <en>
 
 	The Fuji Xerox DocuPrint P205b (USB)

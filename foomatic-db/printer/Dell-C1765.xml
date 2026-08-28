@@ -44,28 +44,25 @@
 	<!--no pjl--><!--No "text"?-->
     </lang>
     <autodetect>
+	<general>
+	    <!-- NOTE: basic print functions available with PCL/PS -->
 <!--
-        <parallel>
             <ieee1284>MFG:Xerox;CMD:SPLC;MDL:Phaser 6110;CLS:PRINTER;STATUS:BUSY;</ieee1284>
-            <manufacturer>Xerox</manufacturer>
             <model>Phaser 6110</model>
             <commandset>SPLC</commandset>
-        </parallel>
 -->
-	<snmp>
-	    <description>Xerox WorkCentre 6015</description>
-	</snmp>
+	    <description>Dell C1765</description>
+	    <manufacturer>Dell</manufacturer>
+	</general>
     </autodetect>
     <functionality>C</functionality>
     <driver>foo2hbpl2</driver>
-    <!--not "unverified"--><!--no "contrib_url"-->
+    <!--not "unverified"-->
+    <contrib_url>https://github.com/OpenPrinting/foo2zjs</contrib_url>
     <comments> <en>
 
-	The Dell C1765nf/nfw is color multifunction printer with a 2014 street
-	price of $170.
-
-	These printers are supported by the foo2hbpl2 open software printer
-	driver.
+	The Dell C1765nf/nfw are color multifunction printers supported
+	by the foo2hbpl2 open software printer driver.
 
     </en> </comments>
 </printer>
