@@ -65,6 +65,14 @@
 	    <arg_defval>ev/foo2xxx-NupOrient-port</arg_defval>
 	</constraint>
 	<constraint sense="true">
+	    <driver>foo2hbpl1</driver>
+	    <arg_defval>ev/foo2xxx-NupOrient-port</arg_defval>
+	</constraint>
+	<constraint sense="true">
+	    <driver>foo2hbpl1-z1</driver>
+	    <arg_defval>ev/foo2xxx-NupOrient-port</arg_defval>
+	</constraint>
+	<constraint sense="true">
 	    <driver>foo2hbpl2</driver>
 	    <arg_defval>ev/foo2xxx-NupOrient-port</arg_defval>
 	</constraint>

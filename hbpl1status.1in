@@ -1,0 +1,107 @@
+.TH hbpl1status 1 "${MODpage}" "hbpl1status ${MODver}"
+#ifndef OLDGROFF
+#include "macros.man"
+#endif
+'\"==========================================================================
+'\"	MANUAL PAGE SOURCE
+'\"==========================================================================
+.SH NAME
+hbpl1status \- report toner levels and state of an HBPLv1 printer
+.SH SYNOPSIS
+.B hbpl1status
+.RB [ -c | -j ]
+.RI [ device ]
+.br
+.B hbpl1status
+.RB [ -c | -j ]
+.B -s
+.br
+.B hbpl1status
+.RB [ -c | -j ]
+.B -i
+.I device-id
+.br
+.B command2foo2hbpl1
+.I job user title copies options
+.RI [ file ]
+.SH DESCRIPTION
+.B hbpl1status
+reads the IEEE 1284 device ID of an HBPLv1 printer, such as the Dell 1250c,
+and decodes its STS field: printer state, error code
+and the levels of the four toner cartridges.
+The printer updates this field live, so it can be read at any time.
+.P
+The device ID is read from a usblp
+.I device
+(Linux only, default
+.BR /dev/usb/lp0 ),
+from the CUPS backend through the side channel
+.RB ( -s ),
+or taken from the command line
+.RB ( -i ).
+.P
+.B foo2hbpl1-wrapper
+runs
+.B "hbpl1status -s -c"
+at the start of every CUPS job.
+Installed as the CUPS filter
+.BR command2foo2hbpl1 ,
+it also answers the
+.B ReportLevels
+command, so the levels can be refreshed without printing:
+.P
+.nf
+.ft CW
+printf '#CUPS-COMMAND\\nReportLevels\\n' | lp -d printer
+.ft P
+.fi
+.P
+Levels are reported to CUPS as marker-levels, with marker-names,
+marker-colors and marker-types, and the printer-state-reasons
+toner-low-warning (below 15%), toner-empty-error,
+marker-supply-missing-error, media-empty-error with media-needed,
+and cover-open-error.
+A missing cartridge has a level of -1.
+.SH OPTIONS
+.TP
+.B -c
+Print CUPS "ATTR:" and "STATE:" messages on stderr.
+.TP
+.B -j
+Print JSON on stdout.
+.TP
+.BI -i " device-id"
+Decode this device ID string.
+.TP
+.B -s
+Ask the CUPS backend for the device ID.
+Only works from a CUPS filter or a program run by one.
+.SH EXAMPLES
+.nf
+.ft CW
+$ hbpl1status /dev/usb/lp0
+Model:  1250c Color Printer
+State:  0x11 0x05
+Error:  none
+Black Toner     80%
+Cyan Toner     100%
+Magenta Toner  100%
+Yellow Toner   100%
+STS:    00 00 11 05 00 ff 00 ff ...
+.ft P
+.fi
+.SH NOTES
+The STS layout was worked out on a Dell 1250c; see README.hbpl1status.
+When the toner bytes do not look like that layout,
+.B -c
+reports nothing.
+.SH FILES
+.BR /usr/bin/hbpl1status ,
+.B /usr/lib/cups/filter/command2foo2hbpl1
+.SH SEE ALSO
+.BR foo2hbpl1-wrapper (1),
+.BR usb_printerid (1)
+'\"
+'\"
+'\"
+.em pdf_outline

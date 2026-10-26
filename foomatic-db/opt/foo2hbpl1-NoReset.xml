@@ -1,0 +1,23 @@
+<option type="bool" id="opt/foo2hbpl1-NoReset">
+    <comments>
+	<en>Reset Printer to default settings before printing JOB</en>
+    </comments>
+    <arg_longname> <en>Reset before and after JOB</en> </arg_longname>
+    <arg_shortname> <en>NoReset</en> </arg_shortname>
+    <arg_execution>
+	<arg_group>CombinedJobs</arg_group>
+	<arg_order>220</arg_order>
+	<arg_spot>A</arg_spot>
+	<arg_substitution />
+	<arg_proto> -e</arg_proto>
+    </arg_execution>
+    <constraints>
+	<constraint sense="true">
+	    <driver>foo2hbpl1-z1</driver>
+	    <arg_defval>0</arg_defval>
+	</constraint>
+    </constraints>
+    <arg_shortname_false>
+	<en>Reset</en>
+    </arg_shortname_false>
+</option>

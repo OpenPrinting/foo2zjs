@@ -1,0 +1,156 @@
+HBPLv1 printer status: the STS field of the IEEE 1284 device ID
+================================================================
+
+hbpl1status(1) reads the status of HBPLv1 printers from their IEEE 1284
+device ID.  This file documents what is known about that data.
+
+Observed on a Dell 1250c (USB 413c:5404) in October 2026.  The Dell 1250c
+is a rebadged Fuji Xerox DocuPrint CP105b / Xerox Phaser 6000, so the same
+layout is likely, but NOT confirmed, on those printers.  Reports from other
+HBPLv1 printers (Dell C1660w/C1760nw, Epson AcuLaser C1700, Phaser 6010,
+CP105b) are welcome: run "hbpl1status /dev/usb/lp0" and compare.
+
+The device ID
+-------------
+
+    MFG:Dell;CMD:PJL,RASTER,DOWNLOAD,HBPL;MDL:1250c Color Printer;
+    DES:Dell 1250c Color Printer;CLS:PRINTER;STS:AAARBQD/AP8AAAAAAAIAAWQj...;
+
+The printer rebuilds the device ID on every request (USB GET_DEVICE_ID class
+request), so STS is live.  It can be read:
+
+  - with the usblp ioctl LPIOC_GET_DEVICE_ID on /dev/usb/lpN (Linux);
+  - from a CUPS filter, with cupsSideChannelDoRequest(CUPS_SC_CMD_GET_DEVICE_ID);
+    the libusb usb backend answers it with a fresh control transfer;
+  - from /usr/lib/cups/backend/usb (macOS) when no job is running.
+
+The Linux sysfs copy (/sys/class/usbmisc/lp0/device/ieee1284_id) is read
+once when the device is probed and is NOT live.
+
+STS is base64 wrapped like MIME: on Linux it contains "\r\n" after 76
+characters, and macOS shows it with spaces.  Remove all white space before
+decoding.  It decodes to 58 bytes.
+
+Reading the device ID never sends data to the printer, so it is safe while
+the printer is idle or busy.  Do not use PJL to query these printers:
+"@PJL INFO ID" and "@PJL INFO STATUS" answer, but "@PJL INFO CONFIG" put the
+printer into error 016-799 for about 90 seconds, without a reply (no page
+was printed).  hbpl1status never writes to the printer.
+
+Layout
+------
+
+Reference, idle, all cartridges in (Black at 80 %):
+
+    00 00 11 05 00 ff 00 ff 00 00 00 00 00 02 00 01
+    64 23 64 23 64 23 50 23 00 00 00 00 64 03 40 00
+    00 ... 00 ff ff
+
+  Offset  Meaning                                              Status
+  ------  ---------------------------------------------------  ---------
+  0-1     00 00                                                unknown
+  2       engine state, see below                              partly
+  3       sub-state, see below                                 partly
+  4-5     error code, first part, big endian (00 ff: none)     confirmed
+  6-7     error code, second part, big endian (00 ff: none)    confirmed
+  8-11    00 00 00 00                                          unknown
+  12      01 while a job is in the printer (from data arrival  observed
+          until the page is out, and during a paper-out stop)
+  13-14   02 00                                                unknown
+  15      01 normally, 00 while a cover was open               observed
+  16, 17  Yellow level (percent), flag                         confirmed
+  18, 19  Magenta level, flag                                  confirmed
+  20, 21  Cyan level, flag                                     confirmed
+  22, 23  Black level, flag                                    confirmed
+  24-27   00 00 00 00                                          unknown
+  28-31   64 03 40 00, unchanged so far                        unknown
+  32-55   zero
+  56-57   ff ff
+
+Toner level and flag: the level is a percentage (0x64 = 100).  The flag is
+0x23 when the cartridge is in place.  With a cartridge removed, its level
+reads 0x7f and its flag 0x20 (confirmed for each of the four colours).
+How a low or empty cartridge is flagged has not been observed yet;
+hbpl1status reports "low" below 15 % and "empty" at 0 %.
+
+Error codes are the codes the printer shows as "MMM-NNN": bytes 4-5 are MMM
+and bytes 6-7 NNN.  Observed:
+
+  093-970  Yellow toner cartridge missing    (removed it: confirmed)
+  093-971  Magenta toner cartridge missing   (confirmed)
+  093-972  Cyan toner cartridge missing      (confirmed)
+  093-973  Black toner cartridge missing     (confirmed)
+  024-969  paper empty                       (confirmed: no paper, then a job)
+  077-300  front cover open                  (confirmed)
+  016-799  job error                         (after "@PJL INFO CONFIG")
+
+Paper empty is only reported once the printer tries to feed a sheet: an
+idle printer with an empty tray still reports no error.  Opening the toner
+access door (without removing a cartridge) changes nothing in STS.
+
+Engine state (bytes 2 and 3), as observed:
+
+  16 01   ready (Continue LED green); held for about 5 minutes after power
+          on, after a job or after an error clears
+  11 05   power saver, entered about 5 minutes after the last activity
+  11 04   power saver, second stage, exactly 6 minutes after 11 05
+          (the fan stops and the Continue LED turns orange during one of
+          these two; which one is not settled)
+  11 07   for a few seconds, when an error clears (likely)
+  12 00   printing (job data arriving, page in progress)
+  10 04   stopped: paper empty (with 024-969)
+  0d 0N   stopped: toner cartridge N missing (1=Y, 2=M, 3=C, 4=K)
+  0b 03   stopped: job error 016-799
+  0f 00   stopped: front cover open (077-300)
+
+Reading the device ID does not wake the printer from power saver (it was
+read every 2 seconds while the printer went to 11 05 and 11 04).
+
+Bytes 28-31 (64 03 40 00) are likely another consumable or maintenance
+counter, by analogy with the toner bytes (0x64 = 100 %, then a flag), but
+they did not change during any test so far.
+
+CUPS
+----
+
+hbpl1status -c turns this into:
+
+    ATTR: marker-colors=#000000,#00FFFF,#FF00FF,#FFFF00
+    ATTR: marker-names="Black Toner","Cyan Toner","Magenta Toner","Yellow Toner"
+    ATTR: marker-types=toner,toner,toner,toner
+    ATTR: marker-low-levels=15,15,15,15
+    ATTR: marker-high-levels=100,100,100,100
+    ATTR: marker-levels=80,100,100,100
+    STATE: -toner-low-warning
+    STATE: -toner-empty-error
+    STATE: -marker-supply-missing-error
+    STATE: -media-empty-error
+    STATE: -media-needed
+    STATE: -cover-open-error
+
+A missing cartridge gets level -1 and marker-supply-missing-error.
+If the toner bytes don't look like the layout above (level over 100 other
+than 0x7f, or a flag outside 0x20-0x3f), nothing is reported.
+
+marker-names is only sent when the queue doesn't already have the same
+names and a printer-supply-description: CUPS 2.4 (scheduler/printers.c,
+cupsdSetPrinterAttr) looks up the previous printer-supply-description with
+IPP_TAG_TEXT, but the copy it made keeps IPP_TAG_NAME, so every update adds
+a duplicate attribute (ipptool then fails with 'Duplicate
+"printer-supply-description" attribute').
+
+The levels reach CUPS in two ways:
+
+  - foo2hbpl1-wrapper runs "hbpl1status -s -c" at the start of every job.
+    The side channel (fd 4) survives foomatic-rip.  The levels are those
+    before the job.
+  - The CUPS filter command2foo2hbpl1 (a link to hbpl1status) handles the
+    ReportLevels command.  modify-ppd adds it to the PPD:
+
+        *cupsFilter:	"application/vnd.cups-command 100 command2foo2hbpl1"
+        *cupsCommands:	"ReportLevels"
+
+    and this updates the levels at any time, without printing (the filter
+    writes nothing, the usb backend logs "Sent 0 bytes"):
+
+        printf '#CUPS-COMMAND\nReportLevels\n' | lp -d <queue>

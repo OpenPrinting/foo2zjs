@@ -106,6 +106,8 @@ BEGIN {
 /"\(magicolor 2490 MF\)"/	{ do_cmd = "foo2lava-pjl" }
 /"\(mc2530DL\)"/		{ do_cmd = "foo2lava-pjl"; negate = 0 }
 /"\(magicolor 4690MF\)"/	{ do_cmd = "foo2lava-pjl" }
+/"\(Laser Printer 1250c\)"/	{ do_cmd = "foo2hbpl1" }
+/"\(DocuPrint CP105\)"/		{ do_cmd = "foo2hbpl1" }
 
 /^\*cupsFilter:.*pdf/ {
     if (cupsdev && do_cmd)
@@ -114,6 +116,12 @@ BEGIN {
 		do_cmd "\""
 
 	print "*% Specify the list of commands we support"
+	if (do_cmd == "foo2hbpl1")
+	{
+	    # Levels are read from the device ID, see hbpl1status(1)
+	    print "*cupsCommands:\t\"ReportLevels\""
+	    next
+	}
 	print "*cupsCommands:\t\"PrintSelfTestPage ReportLevels\""
 
 	print "*% SNMP marker levels are WRONG..."

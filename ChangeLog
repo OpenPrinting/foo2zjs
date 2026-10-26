@@ -1,3 +1,15 @@
+	* Merged Dave Coffin <dcoffin@cybercom.net> dcoffin_hbpl1.patch
+	  to 2026-07-29 code base. This was found following the archive
+	  link seen in https://github.com/OpenPrinting/foo2zjs/issues/2
+	  and resolves the initial issue described there. as per patch:
+	  "Fixed all known bugs in foo2hbpl1.c. It now prints multipage
+	  color and grayscale documents without resetting printer."
+	  NOTE: patch was merged, not applied, so it can co-exists with
+	  existing hbpl(2) code, not replace it. Patch date=2014-04-05.
+	  Added HBPLv1 Xerox Phaser 6000B/6010N and 2 Generic printers.
+	  Updated unfinished options and then also added extra options.
+	  Merged by Joe Da Silva <digital@joescat.com> 2026-08-25
+
 2026-02-06:	ValdikSS <iam@valdikss.org.ru>
 	First release under OpenPrinting umbrella.
 	https://github.com/OpenPrinting/foo2zjs/releases/tag/20260206
@@ -233,6 +245,27 @@
 	* foo2hbpl2 foomatic-db files and PPDs:
 	    Bug with default PageSize.
 	    PLEASE delete and recreate the foo2hbpl2 printers.
+
+2014-03-30	Rick Richardson <rick.richardson@comcast.net>
+	* foo2hbpl1.c: Cleanup the code
+
+2014-03-25	Rick Richardson <rick.richardson@comcast.net>
+	* foomatic and PPD stuff for foo2hbpl1 printers: Halftone and ICM
+
+2014-03-24	Rick Richardson <rick.richardson@comcast.net>
+	* foomatic and PPD stuff for foo2hbpl1 printers
+	    preliminary for: Dell 1250c, Dell C1660w, Dell C1760nw,
+	    Epson AcuLaser C1700, Fuji-Xerox DocuPrint CP105b
+	* foo2hbpl1-wrapper: allow for gs 7.x or gs 8.x
+
+2014-03-24	Dave Coffin <dcoffin@cybercom.net>
+	* foo2hbpl1, foo2hbpl1-wrapper, et al: first cut at revision 1
+	    stuff.  Color works, mono doesn't. No multiple pages. Printer
+	    shows:
+		        Restart Printer
+			Contact Support
+			IfMessageReturns
+			016-313
 
 2014-03-22	Rick Richardson <rick.richardson@comcast.net>
 	* hbpldecode: another redundancy from Dave Coffin
